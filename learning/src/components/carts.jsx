@@ -1,49 +1,90 @@
-import { useState } from "react";
-import Logo from "../images/Logo.jpg";
-import { CiShoppingCart, CiHeart } from "react-icons/ci";
+// Import necessary libraries
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+// Component for displaying cart
+const Carts = ({ dat }) => {
+  const [loading, setLoading] = useState(true);
 
-const Carts = ({ title, description, toggleFavCount, incrementCartClick }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  // Set loading to false once data is available
+  useEffect(() => {
+    if (dat) {
+      setLoading(false);
+    }
+  }, [dat]);
 
-  const handleFavoriteClick = () => {
-    setIsFavorite((prevIsFavorite) => {
-      toggleFavCount(!prevIsFavorite); // Increment or decrement based on current state
-      return !prevIsFavorite;
-    });
+  const formatViews = (views) => {
+    if (views >= 1000000) {
+      return (views / 1000000).toFixed(1) + "M";
+    } else if (views >= 1000) {
+      return (views / 1000).toFixed(1) + "K";
+    }
+    return views;
   };
 
   return (
-    <div className="main-container flex justify-center content-center">
-      <div className="cart-container group w-64 h-[410px] bg-black rounded-t-xl rounded-b-sm cursor-pointer relative overflow-hidden">
-        <img
-          src={Logo}
-          alt=""
-          className="h-72 w-64 rounded-t-xl transform transition-transform duration-300 ease-in-out group-hover:scale-105"
-        />
-        <h2 className="text-white text-xl cursor-pointer ml-2">{title}</h2>
-        <p className="text-gray-300 text-xs ml-2">{description}</p>
+    <Link to={`/video-detail/${dat?.videoId}`}>
+      <div className="cartcomponent h-[50%] w-[100%] relative left-[6%] xs:left-[10%] top-[19%] rounded-lg p-4">
+        {loading ? (
+          <Skeleton height={150} width="100%" className="mb-2 rounded-lg" />
+        ) : (
+          <img
+            src={dat?.thumbnail?.[0]?.url || "default_thumbnail.jpg"} // Default thumbnail if not available
+            alt="Video Thumbnail"
+            className="rounded-lg h-[100%] w-[100%] mb-2 cursor-pointer"
+          />
+        )}
 
-        <div className="flex justify-end gap-2 absolute top-1 left-44">
-          {/* Favorite Icon */}
-          <i
-            className={`text-black text-2xl leading-none ${
-              isFavorite ? "text-red-600" : ""
-            } hover:text-red-600 hover:text-3xl transition-all h-8 w-8 bg-white rounded-full flex justify-center items-center`}
-            onClick={handleFavoriteClick}
-          >
-            <CiHeart />
-          </i>
+        <div className="flex gap-1">
+          {loading ? (
+            <Skeleton circle={true} height={50} width={50} />
+          ) : (
+            <img
+              src={
+                dat?.channelThumbnail?.[0]?.url ||
+                "default_channel_thumbnail.jpg"
+              } // Default channel thumbnail if not available
+              alt="Channel Thumbnail"
+              className="h-[14%] w-[10%] mt-3 rounded-full cursor-pointer"
+            />
+          )}
 
-          {/* Cart Icon */}
-          <i
-            className="text-black text-2xl hover:text-blue-500 hover:text-3xl transition-all h-8 w-8 bg-white rounded-full flex justify-center items-center"
-            onClick={incrementCartClick}
-          >
-            <CiShoppingCart />
-          </i>
+          <p className="font-semibold text-black mb-1 text-md mt-2 cursor-pointer">
+            {loading ? (
+              <Skeleton width={150} />
+            ) : (
+              dat?.title || "No Title Available"
+            )}
+          </p>
+        </div>
+
+        <p className="text-xs text-gray-400 mb-1 cursor-pointer pl-9">
+          {loading ? (
+            <Skeleton width={100} />
+          ) : (
+            dat?.channelTitle || "Unknown Channel"
+          )}
+        </p>
+
+        <div className="flex gap-2 pl-9">
+          <p className="text-xs text-gray-500 cursor-pointer">
+            {loading ? (
+              <Skeleton width={60} />
+            ) : (
+              `${formatViews(dat?.viewCount || 0)} Views`
+            )}
+          </p>
+          <p className="text-xs text-gray-500 cursor-pointer">
+            {loading ? (
+              <Skeleton width={60} />
+            ) : (
+              dat?.publishedTimeText || "N/A"
+            )}
+          </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
