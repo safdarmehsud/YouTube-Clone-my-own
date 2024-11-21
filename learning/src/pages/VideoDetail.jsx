@@ -155,7 +155,7 @@ const VideoDetail = () => {
           </div>
 
           {/* Related Videos Section */}
-          <div className="space-y-4 md:w-full">
+          <div className="space-y-3 md:w-full">
             {relatedVideo.map((related, index) => (
               <Vdcart key={index} video={related} />
             ))}
