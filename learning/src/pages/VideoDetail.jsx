@@ -4,12 +4,11 @@ import axios from "axios";
 import Navbar from "../components/navbar";
 import ReactPlayer from "react-player";
 import Vdcart from "../components/Vdcart";
-import { IoMdNotificationsOutline, IoIosArrowDown } from "react-icons/io";
+
 import { SlLike, SlDislike } from "react-icons/sl";
 
 import { PiShareFatLight } from "react-icons/pi";
 import { HiDownload } from "react-icons/hi";
-import { BsThreeDots } from "react-icons/bs";
 
 const VideoDetail = () => {
   const { id } = useParams();
@@ -78,99 +77,89 @@ const VideoDetail = () => {
   return (
     <>
       <Navbar />
-      <div className="video-detail-main lg:block">
-        <div className="video-detail-1 h-[100%] w-[95%] absolute left-[5%] top-[11%]">
-          <div
-            style={{
-              borderRadius: "15px",
-              overflow: "hidden",
-              width: "67%",
-              height: "65%",
-            }}
-          >
-            <ReactPlayer
-              url={`https://www.youtube.com/watch?v=${id}`}
-              controls
-              playing
-              volume={0.8}
-              width="100%"
-              height="100%"
-            />
-          </div>
-          <h2 className="text-xl font-semibold w-[66%] mt-2">{video.title}</h2>
-          <div className=" flex justify-between w-[67%]">
-            <div className="flex mt-5 ">
-              <img
-                src={
-                  video?.thumbnail?.[0]?.url || "default_channel_thumbnail.jpg"
-                }
-                alt="Channel Thumbnail"
-                className="h-12 w-12 rounded-full "
+      <div className="video-detail-main  min-h-screen p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-[88%] mx-auto">
+          {/* Video Player and Details Section */}
+          <div className="lg:col-span-2">
+            {/* Video Player */}
+            <div className="w-[100%] aspect-video rounded-lg overflow-hidden bg-black">
+              <ReactPlayer
+                url={`https://www.youtube.com/watch?v=${id}`}
+                controls
+                playing
+                volume={0.8}
+                width="100%"
+                height="100%"
               />
-              <div className="block ml-2">
-                <p className="text-sm text-black font-semibold cursor-pointer ">
-                  {video?.channelTitle}
-                </p>
-                <p className="text-sm text-gray-600 cursor-pointer">
-                  {video?.subscriberCountText || "N/A Subscribers"}
-                </p>
-              </div>
-              <ul
-                className="flex border-1 border-solid border-black cursor-pointer p-2"
-                // onClick={handleSubscribersClick}
-              >
-                <li>
-                  <IoMdNotificationsOutline className="text-2xl font-light" />
-                </li>
-                <p className="text-sm font-semibold p-1">Subscribe</p>
-                <li className="p-1">
-                  <IoIosArrowDown />
-                </li>
-              </ul>
             </div>
-            <div className="mt-5">
-              <ul className="flex  ">
-                <ul className="flex    border-solid rounded-full bg-slate-100 p-1 mr-1 h-8">
-                  <li
-                    className={`flex  p-1 text-lg cursor-pointer ${
-                      isLike ? " text-gray-400" : "text-black"
-                    }`}
-                    onClick={handleLikeClick}
-                  >
-                    <SlLike className="" />
-                    <p className="ml-1  text-sm">
-                      {video?.likeCount || "2.6K"}
-                    </p>
-                  </li>
-                  <li
-                    className={` p-1 border-l-[2px]  border-solid border-gray-300 text-lg cursor-pointer ${
-                      isDislike ? "text-gray-400" : " text-black"
-                    }`}
-                    onClick={handleDislikeClick}
-                  >
-                    <SlDislike className="ml-1 " />
-                  </li>
-                </ul>
-                <li className="p-[8px] flex bg-slate-100 rounded-full mr-1 h-8 cursor-pointer">
-                  <PiShareFatLight className="text-xl" />
-                  <p className="text-sm">Share</p>
-                </li>
-                <li className="p-[8px] flex bg-slate-100 rounded-full mr-1 h-8 cursor-pointer">
-                  <HiDownload className="text-xl" />
-                  <p className="text-sm">Download</p>
-                </li>
-                <li className="p-[6.5px] bg-slate-100 rounded-full mr-1 h-8 w-9 cursor-pointer">
-                  <BsThreeDots className="text-xl" />
-                </li>
-              </ul>
+
+            {/* Video Title */}
+            <h1 className="text-2xl font-bold mt-4 text-gray-800">
+              {video.title}
+            </h1>
+
+            {/* Channel Details and Actions */}
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-4 border-b border-gray-300 pb-4">
+              <div className="flex items-center">
+                <img
+                  src={
+                    video?.thumbnail?.[0]?.url ||
+                    "default_channel_thumbnail.jpg"
+                  }
+                  alt="Channel Thumbnail"
+                  className="h-12 w-12 rounded-full"
+                />
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-gray-800 cursor-pointer">
+                    {video?.channelTitle}
+                  </p>
+                  <p className="text-sm text-gray-600 cursor-pointer">
+                    {video?.subscriberCountText || "N/A Subscribers"}
+                  </p>
+                </div>
+              </div>
+
+              <button className="mt-4 sm:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600">
+                Subscribe
+              </button>
+            </div>
+
+            {/* Like, Share, and Other Actions */}
+            <div className="flex space-x-4 mt-4">
+              <button
+                onClick={handleLikeClick}
+                className={`flex items-center space-x-2 bg-gray-200 px-4 py-2 rounded-lg ${
+                  isLike ? "text-blue-600" : "text-gray-800"
+                }`}
+              >
+                <SlLike className="text-xl" />
+                <span>{video?.likeCount || "2.6K"}</span>
+              </button>
+              <button
+                onClick={handleDislikeClick}
+                className={`flex items-center space-x-2 bg-gray-200 px-4 py-2 rounded-lg ${
+                  isDislike ? "text-blue-600" : "text-gray-800"
+                }`}
+              >
+                <SlDislike className="text-xl" />
+              </button>
+              <button className="flex items-center space-x-2 bg-gray-200 px-4 py-2 rounded-lg text-gray-800">
+                <PiShareFatLight className="text-xl" />
+                <span>Share</span>
+              </button>
+              <button className="flex items-center space-x-2 bg-gray-200 px-4 py-2 rounded-lg text-gray-800">
+                <HiDownload className="text-xl" />
+                <span>Download</span>
+              </button>
             </div>
           </div>
-        </div>
 
-        <div className="video-detail-2 flex absolute top-[15%] left-[70%] flex-col space-y-4">
-          {relatedVideo.map((related, index) => (
-            <Vdcart key={index} video={related} />
-          ))}
+          {/* Related Videos Section */}
+          <div className="space-y-4 md:w-full">
+            {relatedVideo.map((related, index) => (
+              <Vdcart key={index} video={related} />
+            ))}
+          </div>
         </div>
       </div>
     </>
